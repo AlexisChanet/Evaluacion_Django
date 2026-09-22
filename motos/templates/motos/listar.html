@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventario de Motocicletas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>🏍️ Inventario de Motocicletas</h2>
+        <a href="{% url 'crear_moto' %}" class="btn btn-primary"> + Nueva Motocicleta</a>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Año</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for moto in motos %}
+                    <tr>
+                        <td>{{ moto.id }}</td>
+                        <td>{{ moto.marca }}</td>
+                        <td>{{ moto.modelo }}</td>
+                        <td>{{ moto.anio }}</td>
+                        <td>${{ moto.precio }}</td>
+                        <td>{{ moto.stock }}</td>
+                        <td>
+                            <!-- Botón de Editar conectado a la ruta editar_moto -->
+                            <a href="{% url 'editar_moto' moto.id %}" class="btn btn-sm btn-warning">Editar</a>
+                            
+                            <!-- Botón de Eliminar conectado a la ruta eliminar_moto con alerta de confirmación -->
+                            <a href="{% url 'eliminar_moto' moto.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar esta motocicleta?');">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center">No hay motocicletas registradas en el sistema.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
