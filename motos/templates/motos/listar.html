@@ -2,58 +2,191 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Inventario de Motocicletas</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario | Kaneda Ōtobai</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-carmesi: #7a172c;
+            --rojo-kaneda: #c2253b;
+            --fondo-mate: #dfd5ce;
+            --gris-purpura: #5c4d63;
+            --texto-oscuro: #1f1822;
+        }
+
+        body {
+            background-color: var(--fondo-mate);
+            color: var(--texto-oscuro);
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .navbar {
+            background-color: var(--bg-carmesi) !important;
+            padding: 1.2rem 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .navbar-brand {
+            color: #ffffff !important;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        .nav-link {
+            color: #e8b4bc !important;
+            transition: 0.3s;
+            margin-left: 1rem;
+        }
+        .nav-link:hover {
+            color: #ffffff !important;
+        }
+        .nav-link.activo {
+            color: #ffffff !important;
+            font-weight: bold;
+            border-bottom: 2px solid var(--rojo-kaneda);
+            padding-bottom: 0.2rem;
+        }
+
+        .contenedor-limpio {
+            background-color: #f7f3f0;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .btn-principal {
+            background-color: var(--rojo-kaneda);
+            color: #ffffff;
+            border-radius: 6px;
+            padding: 10px 24px;
+            font-weight: 600;
+            border: none;
+            transition: 0.2s;
+        }
+        .btn-principal:hover {
+            background-color: var(--bg-carmesi);
+            color: #ffffff;
+        }
+
+        .table thead th {
+            color: var(--gris-purpura);
+            border-bottom: 2px solid var(--rojo-kaneda);
+        }
+        .table tbody td {
+            vertical-align: middle;
+        }
+
+        .img-moto {
+            width: 100px;
+            height: 65px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .badge-stock {
+            padding: 0.5em 0.8em;
+            border-radius: 8px;
+        }
+        .estado-ok {
+            background-color: rgba(92, 77, 99, 0.1);
+            color: var(--gris-purpura);
+            border: 1px solid var(--gris-purpura);
+        }
+        .estado-agotado {
+            background-color: rgba(194, 37, 59, 0.1);
+            color: var(--rojo-kaneda);
+            border: 1px solid var(--rojo-kaneda);
+        }
+    </style>
 </head>
-<body class="bg-light">
+<body>
 
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>🏍️ Inventario de Motocicletas</h2>
-        <a href="{% url 'crear_moto' %}" class="btn btn-primary"> + Nueva Motocicleta</a>
-    </div>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'listar_motos' %}">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/motorcycle.png" alt="Logo" width="32" height="32" class="me-2">
+                KANEDA ŌTOBAI
+            </a>
+            
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/' %}activo{% endif %}" href="{% url 'listar_motos' %}">Inventario</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/crear/' %}activo{% endif %}" href="{% url 'crear_moto' %}">Nuevo Registro</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-    <div class="card shadow">
-        <div class="card-body">
-            <table class="table table-striped table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Marca</th>
-                        <th>Modelo</th>
-                        <th>Año</th>
-                        <th>Precio</th>
-                        <th>Stock</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for moto in motos %}
-                    <tr>
-                        <td>{{ moto.id }}</td>
-                        <td>{{ moto.marca }}</td>
-                        <td>{{ moto.modelo }}</td>
-                        <td>{{ moto.anio }}</td>
-                        <td>${{ moto.precio }}</td>
-                        <td>{{ moto.stock }}</td>
-                        <td>
-                            <!-- Botón de Editar conectado a la ruta editar_moto -->
-                            <a href="{% url 'editar_moto' moto.id %}" class="btn btn-sm btn-warning">Editar</a>
-                            
-                            <!-- Botón de Eliminar conectado a la ruta eliminar_moto con alerta de confirmación -->
-                            <a href="{% url 'eliminar_moto' moto.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar esta motocicleta?');">Eliminar</a>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="7" class="text-center">No hay motocicletas registradas en el sistema.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    <div class="container">
+        <div class="contenedor-limpio">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="fw-bold mb-1" style="color: var(--bg-carmesi);">Catálogo de Modelos</h2>
+                    <p class="text-muted small">Gestión de inventario principal</p>
+                </div>
+                <a href="{% url 'crear_moto' %}" class="btn btn-principal">+ Registrar Moto</a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Vista</th>
+                            <th>Marca</th>
+                            <th>Modelo</th>
+                            <th>Año</th>
+                            <th>Precio</th>
+                            <th>Estado</th>
+                            <th class="text-end">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for moto in motos %}
+                        <tr>
+                            <td>
+                                <!-- Imágenes dinámicas renderizadas según la marca registrada -->
+                                {% if "Yamaha" in moto.marca %}
+                                    <img src="https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?q=80&w=300&auto=format&fit=crop" class="img-moto" alt="Yamaha">
+                                {% elif "Honda" in moto.marca %}
+                                    <img src="https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=300&auto=format&fit=crop" class="img-moto" alt="Honda">
+                                {% else %}
+                                    <img src="https://images.unsplash.com/photo-1609630875174-b13c7793d5c3?q=80&w=300&auto=format&fit=crop" class="img-moto" alt="Moto General">
+                                {% endif %}
+                            </td>
+                            <td class="fw-bold" style="color: var(--bg-carmesi);">{{ moto.marca }}</td>
+                            <td>{{ moto.modelo }}</td>
+                            <td>{{ moto.anio }}</td>
+                            <td class="fw-bold">${{ moto.precio }}</td>
+                            <td>
+                                {% if moto.stock > 0 %}
+                                    <span class="badge badge-stock estado-ok">En Stock ({{ moto.stock }})</span>
+                                {% else %}
+                                    <span class="badge badge-stock estado-agotado">Agotado</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end">
+                                <a href="{% url 'editar_moto' moto.id %}" class="btn btn-sm btn-outline-secondary me-1 px-3">Editar</a>
+                                <a href="{% url 'eliminar_moto' moto.id %}" class="btn btn-sm btn-outline-danger px-3">Borrar</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-5">
+                                No hay motocicletas registradas en el inventario.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 
 </body>
 </html>

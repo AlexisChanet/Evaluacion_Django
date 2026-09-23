@@ -2,34 +2,184 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Agregar Motocicleta</title>
-    <!-- Agregamos Bootstrap para que se vea bien -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Moto | Kaneda Ōtobai</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-carmesi: #7a172c;
+            --rojo-kaneda: #c2253b;
+            --fondo-mate: #dfd5ce;
+            --gris-purpura: #5c4d63;
+            --texto-oscuro: #1f1822;
+        }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-header bg-dark text-white">
-                    <h3 class="mb-0">🏍️ Registrar Nueva Motocicleta</h3>
-                </div>
-                <div class="card-body">
-                    <!-- Aquí se genera el formulario de Django -->
-                    <form method="POST">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        
-                        <div class="d-grid mt-4">
-                            <button type="submit" class="btn btn-success">Guardar Motocicleta</button>
+        body {
+            background-color: var(--fondo-mate);
+            color: var(--texto-oscuro);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background-color: var(--bg-carmesi) !important;
+            padding: 1.2rem 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .navbar-brand {
+            color: #ffffff !important;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        .nav-link {
+            color: #e8b4bc !important;
+            transition: 0.3s;
+            margin-left: 1rem;
+        }
+        .nav-link:hover {
+            color: #ffffff !important;
+        }
+        .nav-link.activo {
+            color: #ffffff !important;
+            font-weight: bold;
+            border-bottom: 2px solid var(--rojo-kaneda);
+            padding-bottom: 0.2rem;
+        }
+
+        .tarjeta-formulario {
+            background-color: #f7f3f0;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+        }
+        .form-control {
+            border: 1px solid rgba(92, 77, 99, 0.2);
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+        }
+        .form-label {
+            font-weight: 600;
+            color: var(--gris-purpura);
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+        }
+
+        .btn-guardar {
+            background-color: var(--rojo-kaneda);
+            color: #ffffff;
+            border-radius: 6px;
+            padding: 12px 24px;
+            font-weight: 600;
+            border: none;
+            width: 100%;
+        }
+        .btn-guardar:hover {
+            background-color: var(--bg-carmesi);
+        }
+        .btn-cancelar {
+            color: var(--gris-purpura);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .panel-imagen {
+            background-image: url('https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=800&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            min-height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'listar_motos' %}">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/motorcycle.png" alt="Logo" width="32" height="32" class="me-2">
+                KANEDA ŌTOBAI
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/' %}activo{% endif %}" href="{% url 'listar_motos' %}">Inventario</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/crear/' %}activo{% endif %}" href="{% url 'crear_moto' %}">Nuevo Registro</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container flex-grow-1 d-flex align-items-center justify-content-center">
+        <div class="row tarjeta-formulario w-100" style="max-width: 900px;">
+            <div class="col-md-7 p-5">
+                <h3 class="fw-bold mb-1" style="color: var(--bg-carmesi);">Nuevo Registro</h3>
+                <p class="text-muted small mb-4">Ingresa los datos técnicos del vehículo</p>
+
+                <form method="POST" onsubmit="this.querySelector('button[type=submit]').disabled=true;">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="{{ form.marca.id_for_label }}">Marca</label>
+                            {{ form.marca }}
+                            <div class="text-danger mt-1" style="font-size: 0.8rem;">{{ form.marca.errors }}</div>
                         </div>
-                    </form>
-                </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="{{ form.modelo.id_for_label }}">Modelo</label>
+                            {{ form.modelo }}
+                            <div class="text-danger mt-1" style="font-size: 0.8rem;">{{ form.modelo.errors }}</div>
+                        </div>
+
+                        <!-- Apuntando correctamente a form.anio -->
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label" for="{{ form.anio.id_for_label }}">Año</label>
+                            {{ form.anio }}
+                            <div class="text-danger mt-1" style="font-size: 0.8rem;">{{ form.anio.errors }}</div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label" for="{{ form.precio.id_for_label }}">Precio</label>
+                            {{ form.precio }}
+                            <div class="text-danger mt-1" style="font-size: 0.8rem;">{{ form.precio.errors }}</div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label" for="{{ form.stock.id_for_label }}">Stock</label>
+                            {{ form.stock }}
+                            <div class="text-danger mt-1" style="font-size: 0.8rem;">{{ form.stock.errors }}</div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn-guardar shadow-sm">Confirmar y Guardar</button>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <a href="{% url 'listar_motos' %}" class="btn-cancelar">← Volver al inventario</a>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-5 d-none d-md-block p-0">
+                <div class="panel-imagen"></div>
             </div>
         </div>
     </div>
-</div>
 
+    <script>
+        function formatearMiles(input) {
+            let valor = input.value.replace(/\D/g, "");
+            input.value = valor.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+    </script>
 </body>
 </html>
