@@ -17,7 +17,7 @@ class MotocicletaForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: MT-07'})
     )
 
-    # Sincronizado como 'anio' para que coincida perfectamente con el modelo de base de datos
+    
     anio = forms.IntegerField(
         label="AÑO",
         validators=[

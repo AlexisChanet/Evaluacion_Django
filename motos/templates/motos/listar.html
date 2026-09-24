@@ -16,10 +16,17 @@
             --texto-oscuro: #1f1822;
         }
 
+        /* Animación moderna de entrada */
+        @keyframes aparecerSuave {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         body {
             background-color: var(--fondo-mate);
             color: var(--texto-oscuro);
             font-family: 'Segoe UI', Arial, sans-serif;
+            animation: aparecerSuave 0.6s ease-out forwards;
         }
 
         .navbar {
@@ -76,6 +83,19 @@
         }
         .table tbody td {
             vertical-align: middle;
+        }
+
+        /* Interacción moderna en las filas de la tabla */
+        .table tbody tr {
+            transition: all 0.2s ease-in-out;
+        }
+        .table tbody tr:hover {
+            background-color: #ffffff;
+            transform: scale(1.01);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            z-index: 1;
+            position: relative;
+            border-radius: 8px;
         }
 
         .img-moto {
@@ -150,7 +170,6 @@
                         {% for moto in motos %}
                         <tr>
                             <td>
-                                <!-- Imágenes dinámicas renderizadas según la marca registrada -->
                                 {% if "Yamaha" in moto.marca %}
                                     <img src="https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?q=80&w=300&auto=format&fit=crop" class="img-moto" alt="Yamaha">
                                 {% elif "Honda" in moto.marca %}
