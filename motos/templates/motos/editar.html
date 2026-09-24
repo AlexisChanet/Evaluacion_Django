@@ -31,6 +31,7 @@
             animation: aparecerSuave 0.6s ease-out forwards;
         }
 
+        /* Navbar Carmesí Unificado */
         .navbar {
             background-color: var(--bg-carmesi) !important;
             padding: 1.2rem 0;
@@ -49,6 +50,12 @@
         .nav-link:hover {
             color: #ffffff !important;
         }
+        .nav-link.activo {
+            color: #ffffff !important;
+            font-weight: bold;
+            border-bottom: 2px solid var(--fondo-mate);
+            padding-bottom: 0.2rem;
+        }
 
         .tarjeta-formulario {
             background-color: #f7f3f0;
@@ -60,7 +67,6 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        /* Efecto hover en la tarjeta principal */
         .tarjeta-formulario:hover {
             transform: translateY(-5px);
             box-shadow: 0 12px 30px rgba(122, 23, 44, 0.15);
@@ -117,6 +123,7 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
+                        <!-- En editar.html no dejamos ninguno "activo" porque es una vista oculta del menú -->
                         <a class="nav-link" href="{% url 'listar_motos' %}">Inventario</a>
                     </li>
                     <li class="nav-item">

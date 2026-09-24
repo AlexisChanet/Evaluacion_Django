@@ -16,7 +16,6 @@
             --texto-oscuro: #1f1822;
         }
 
-        /* Animación moderna de entrada */
         @keyframes aparecerSuave {
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
@@ -29,6 +28,7 @@
             animation: aparecerSuave 0.6s ease-out forwards;
         }
 
+        /* Navbar Carmesí Unificado */
         .navbar {
             background-color: var(--bg-carmesi) !important;
             padding: 1.2rem 0;
@@ -50,7 +50,7 @@
         .nav-link.activo {
             color: #ffffff !important;
             font-weight: bold;
-            border-bottom: 2px solid var(--rojo-kaneda);
+            border-bottom: 2px solid var(--fondo-mate);
             padding-bottom: 0.2rem;
         }
 
@@ -85,7 +85,6 @@
             vertical-align: middle;
         }
 
-        /* Interacción moderna en las filas de la tabla */
         .table tbody tr {
             transition: all 0.2s ease-in-out;
         }
@@ -175,7 +174,7 @@
                                 {% elif "Honda" in moto.marca %}
                                     <img src="https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=300&auto=format&fit=crop" class="img-moto" alt="Honda">
                                 {% else %}
-                                    <img src="https://images.unsplash.com/photo-1609630875174-b13c7793d5c3?q=80&w=300&auto=format&fit=crop" class="img-moto" alt="Moto General">
+                                    <img src="https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?q=80&w=300&auto=format&fit=crop" class="img-moto" alt="Moto General">
                                 {% endif %}
                             </td>
                             <td class="fw-bold" style="color: var(--bg-carmesi);">{{ moto.marca }}</td>
