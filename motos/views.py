@@ -49,3 +49,6 @@ def eliminar_moto(request, id):
     moto.delete() 
     # Vuelvo a cargar la página principal con la tabla actualizada.
     return redirect('listar_motos')
+
+def inicio(request):
+    return render(request, 'motos/inicio.html')
