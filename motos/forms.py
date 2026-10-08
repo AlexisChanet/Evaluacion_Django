@@ -8,13 +8,21 @@ class MotocicletaForm(forms.ModelForm):
     marca = forms.CharField(
         max_length=50,
         validators=[RegexValidator(r'^[a-zA-Z0-9\s]+$', 'Error: Usa solo letras y números.')],
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Yamaha', 'maxlength': '50'})
+        widget=forms.TextInput(attrs={
+            'class': 'form-control', 
+            'placeholder': 'Ej: Yamaha', 
+            'maxlength': '50'
+        })
     )
     
     modelo = forms.CharField(
         max_length=50,
         validators=[RegexValidator(r'^[a-zA-Z0-9\s\-]+$', 'Error: Usa solo letras, números y guiones.')],
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: MT-07', 'maxlength': '50'})
+        widget=forms.TextInput(attrs={
+            'class': 'form-control', 
+            'placeholder': 'Ej: MT-07', 
+            'maxlength': '50'
+        })
     )
 
     anio = forms.IntegerField(
@@ -27,8 +35,9 @@ class MotocicletaForm(forms.ModelForm):
         },
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
-            'min': '1900', # Bloquea el teclado hacia abajo
-            'max': str(datetime.date.today().year + 1) # Bloquea el teclado hacia arriba
+            'min': '1900',
+            'max': str(datetime.date.today().year + 1),
+            'oninput': 'if(this.value.length > 4) this.value = this.value.slice(0, 4);'  # Frena el teclado a máximo 4 dígitos
         })
     )
 
@@ -37,21 +46,22 @@ class MotocicletaForm(forms.ModelForm):
             'class': 'form-control', 
             'placeholder': 'Ej: 1.500.000',
             'oninput': 'formatearMiles(this)',
-            'maxlength': '10' # "10.000.000" tiene exactamente 10 caracteres. El HTML no dejará escribir más.
+            'maxlength': '10'  # Limita a 10 caracteres (ej: 10.000.000)
         })
     )
 
     stock = forms.IntegerField(
         min_value=0,
-        max_value=100, # Límite estricto que pediste (0 a 100)
+        max_value=100,
         error_messages={
             'min_value': 'Error: El stock no puede ser negativo.',
             'max_value': 'Error: La capacidad máxima de stock es 100 unidades.'
         },
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
-            'min': '0', # Frena el teclado en 0
-            'max': '100' # Frena el teclado en 100
+            'min': '0',
+            'max': '100',
+            'oninput': 'if(this.value.length > 3) this.value = this.value.slice(0, 3);'  # Frena el teclado a máximo 3 dígitos (0 a 100)
         })
     )
 
@@ -79,7 +89,6 @@ class MotocicletaForm(forms.ModelForm):
         if precio <= 0:
             raise forms.ValidationError("Error: El precio debe ser mayor a $0.")
             
-        # Límite estricto de 10 millones que pediste
         if precio > 10000000:
             raise forms.ValidationError("Error: El precio máximo permitido es $10.000.000.")
             
