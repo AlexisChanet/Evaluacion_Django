@@ -2,6 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Motocicleta
 from .forms import MotocicletaForm
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.models import Token
+
+
 # READ: Muestro la página principal con el listado completo de motos.
 def listar_motos(request):
     # Le pido a la base de datos que me traiga todas las motocicletas guardadas.
@@ -52,3 +59,22 @@ def eliminar_moto(request, id):
 
 def inicio(request):
     return render(request, 'motos/inicio.html')
+
+
+
+class LogoutApiView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            token = Token.objects.get(user=request.user)
+            token.delete()
+
+            return Response({
+                'mensaje': 'Sesión cerrada correctamente'
+            }, status=status.HTTP_200_OK)
+
+        except Token.DoesNotExist:
+            return Response({
+                'error': 'No existe un token para este usuario'
+            }, status=status.HTTP_400_BAD_REQUEST)
