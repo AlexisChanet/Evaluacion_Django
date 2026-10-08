@@ -6,8 +6,13 @@ from .forms import MotocicletaForm
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
+
+
+# READ: Muestro la página principal con el listado completo de motos.
+from rest_framework.permissions import AllowAny
+
 from django.contrib.auth import authenticate
 
 # --- VISTAS WEB NORMALES (MVT) ---
@@ -53,6 +58,23 @@ def inicio(request):
     return render(request, 'motos/inicio.html')
 
 
+
+class LogoutApiView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            token = Token.objects.get(user=request.user)
+            token.delete()
+
+            return Response({
+                'mensaje': 'Sesión cerrada correctamente'
+            }, status=status.HTTP_200_OK)
+
+        except Token.DoesNotExist:
+            return Response({
+                'error': 'No existe un token para este usuario'
+            }, status=status.HTTP_400_BAD_REQUEST)
 # --- VISTA DE LA API (ESTILO DEL PROFESOR CON TOKEN) ---
 class LoginApiView(APIView):
     permission_classes = [AllowAny]

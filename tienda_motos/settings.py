@@ -37,11 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
-    # --- LIBRERÍA DE LA API ---
-    'rest_framework',
-    
-    # --- TUS APPS ---
+    'rest_framework', 
+    'rest_framework.authtoken',
     'motos',
 ]
 
@@ -133,6 +130,14 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
 # Redirigir automáticamente después de iniciar o cerrar sesión
 LOGIN_REDIRECT_URL = 'listar_motos'
 LOGOUT_REDIRECT_URL = 'inicio'
