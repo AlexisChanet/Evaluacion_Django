@@ -37,7 +37,8 @@ class MotocicletaForm(forms.ModelForm):
             'class': 'form-control',
             'min': '1900',
             'max': str(datetime.date.today().year + 1),
-            'oninput': 'if(this.value.length > 4) this.value = this.value.slice(0, 4);'  # Frena el teclado a máximo 4 dígitos
+            'onkeydown': 'return ["e", "E", "+", "-", "."].includes(event.key) ? false : true;',
+            'oninput': 'if(this.value.length > 4) this.value = this.value.slice(0, 4);'
         })
     )
 
@@ -46,7 +47,7 @@ class MotocicletaForm(forms.ModelForm):
             'class': 'form-control', 
             'placeholder': 'Ej: 1.500.000',
             'oninput': 'formatearMiles(this)',
-            'maxlength': '10'  # Limita a 10 caracteres (ej: 10.000.000)
+            'maxlength': '10'
         })
     )
 
@@ -61,7 +62,8 @@ class MotocicletaForm(forms.ModelForm):
             'class': 'form-control',
             'min': '0',
             'max': '100',
-            'oninput': 'if(this.value.length > 3) this.value = this.value.slice(0, 3);'  # Frena el teclado a máximo 3 dígitos (0 a 100)
+            'onkeydown': 'return ["e", "E", "+", "-", "."].includes(event.key) ? false : true;',
+            'oninput': 'if(this.value.length > 3) this.value = this.value.slice(0, 3);'
         })
     )
 
