@@ -1,43 +1,58 @@
 from django import forms
-from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
+from django.core.validators import RegexValidator
 import datetime
 from .models import Motocicleta
 
 class MotocicletaForm(forms.ModelForm):
     
     marca = forms.CharField(
-        max_length=30,
-        validators=[RegexValidator(r'^[a-zA-Z0-9\s]+$', 'Solo letras y números.')],
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Yamaha'})
+        max_length=50,
+        validators=[RegexValidator(r'^[a-zA-Z0-9\s]+$', 'Error: Usa solo letras y números.')],
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Yamaha', 'maxlength': '50'})
     )
     
     modelo = forms.CharField(
         max_length=50,
-        validators=[RegexValidator(r'^[a-zA-Z0-9\s\-]+$', 'Solo letras, números y guiones.')],
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: MT-07'})
+        validators=[RegexValidator(r'^[a-zA-Z0-9\s\-]+$', 'Error: Usa solo letras, números y guiones.')],
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: MT-07', 'maxlength': '50'})
     )
 
-    
     anio = forms.IntegerField(
         label="AÑO",
-        validators=[
-            MinValueValidator(1900, message="El año no puede ser menor a 1900."),
-            MaxValueValidator(datetime.date.today().year + 1, message="Año inválido.")
-        ],
-        widget=forms.NumberInput(attrs={'class': 'form-control'})
+        min_value=1900,
+        max_value=datetime.date.today().year + 1,
+        error_messages={
+            'min_value': 'Error: El año mínimo permitido es 1900.',
+            'max_value': f'Error: El año máximo es {datetime.date.today().year + 1}.'
+        },
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'min': '1900', # Bloquea el teclado hacia abajo
+            'max': str(datetime.date.today().year + 1) # Bloquea el teclado hacia arriba
+        })
     )
 
     precio = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'form-control', 
             'placeholder': 'Ej: 1.500.000',
-            'oninput': 'formatearMiles(this)'
+            'oninput': 'formatearMiles(this)',
+            'maxlength': '10' # "10.000.000" tiene exactamente 10 caracteres. El HTML no dejará escribir más.
         })
     )
 
     stock = forms.IntegerField(
-        validators=[MinValueValidator(0, message="El stock no puede ser negativo.")],
-        widget=forms.NumberInput(attrs={'class': 'form-control'})
+        min_value=0,
+        max_value=100, # Límite estricto que pediste (0 a 100)
+        error_messages={
+            'min_value': 'Error: El stock no puede ser negativo.',
+            'max_value': 'Error: La capacidad máxima de stock es 100 unidades.'
+        },
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'min': '0', # Frena el teclado en 0
+            'max': '100' # Frena el teclado en 100
+        })
     )
 
     class Meta:
@@ -59,15 +74,13 @@ class MotocicletaForm(forms.ModelForm):
         try:
             precio = int(precio_limpio)
         except ValueError:
-            raise forms.ValidationError("Ingrese un número válido.")
+            raise forms.ValidationError("Error: Ingresa un precio numérico válido.")
             
         if precio <= 0:
-            raise forms.ValidationError("El precio debe ser mayor a cero.")
+            raise forms.ValidationError("Error: El precio debe ser mayor a $0.")
+            
+        # Límite estricto de 10 millones que pediste
+        if precio > 10000000:
+            raise forms.ValidationError("Error: El precio máximo permitido es $10.000.000.")
             
         return precio
-        
-    def clean_stock(self):
-        stock = self.cleaned_data.get('stock')
-        if stock is not None and stock < 0:
-            raise forms.ValidationError("El stock no puede ser negativo.")
-        return stock
