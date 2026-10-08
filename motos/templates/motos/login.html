@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Seguro | Kaneda Ōtobai</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            background-color: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Fondo inmersivo con tu paleta de colores */
+        .bg-kaneda {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(194, 37, 59, 0.4)), url('https://images.unsplash.com/photo-1558981420-c532902e58b4?q=80&w=1920&auto=format&fit=crop');
+            height: 100%;
+            background-position: center;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-box {
+            background: rgba(20, 20, 20, 0.9);
+            padding: 3rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .login-box h2 {
+            font-weight: bold;
+            margin-bottom: 2rem;
+            letter-spacing: 2px;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 12px;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: #c2253b;
+            box-shadow: 0 0 0 0.25rem rgba(194, 37, 59, 0.25);
+        }
+
+        .btn-ingresar {
+            background-color: #c2253b;
+            color: white;
+            font-weight: bold;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 1rem;
+            text-transform: uppercase;
+        }
+
+        .btn-ingresar:hover {
+            background-color: #9c1d2f;
+        }
+
+        .error-message {
+            color: #ff4d4d;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-kaneda">
+        <div class="login-box">
+            <h2>KANEDA ŌTOBAI</h2>
+            
+            <!-- El formulario enviará los datos al sistema de Django -->
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <input type="text" name="username" class="form-control" placeholder="Nombre de usuario" required>
+                </div>
+                <div class="mb-3">
+                    <input type="password" name="password" class="form-control" placeholder="Contraseña" required>
+                </div>
+                
+                <button type="submit" class="btn-ingresar">Entrar al Sistema</button>
+
+                <!-- Aquí se mostrará el mensaje si la contraseña es incorrecta -->
+                {% if form.errors %}
+                    <div class="error-message">Credenciales incorrectas. Intenta de nuevo.</div>
+                {% endif %}
+            </form>
+            
+            <!-- Botón para volver al catálogo público -->
+            <div class="mt-4">
+                <a href="{% url 'inicio' %}" class="text-secondary text-decoration-none" style="font-size: 0.9rem;">← Volver al catálogo público</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
